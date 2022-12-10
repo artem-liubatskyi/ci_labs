@@ -1,8 +1,7 @@
 from __future__ import print_function
 
-import keras
 import numpy as np
-from keras import losses, metrics, optimizers
+from keras import losses, metrics, optimizers, utils
 from keras.datasets import fashion_mnist
 from keras.layers import Dense, Dropout
 from keras.models import Sequential
@@ -22,8 +21,8 @@ test_images = test_images.astype("float32")
 train_images = (train_images-np.mean(train_images))/np.std(train_images)
 test_images = (test_images-np.mean(test_images))/np.std(test_images)
 
-train_labels = keras.utils.to_categorical(train_labels, num_classes)
-test_labels = keras.utils.to_categorical(test_labels, num_classes)
+train_labels = utils.to_categorical(train_labels, num_classes)
+test_labels = utils.to_categorical(test_labels, num_classes)
 
 model = Sequential()
 model.add(Dense(256, activation="relu", input_shape=(784,)))
@@ -34,9 +33,9 @@ model.add(Dense(num_classes, activation="softmax"))
 model.summary()
 
 model.compile(
-    loss="categorical_crossentropy",
+    loss=losses.CategoricalCrossentropy(),
     optimizer=optimizers.Adam(),
-    metrics=[metrics.BinaryAccuracy()],
+    metrics=[metrics.Accuracy()],
 )
 
 model.fit(train_images, train_labels,
